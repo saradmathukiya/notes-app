@@ -112,58 +112,60 @@ const NotesList = () => {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-lg shadow">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Title</TableHead>
-                                <TableHead>Content</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filteredNotes.map((note) => (
-                                <TableRow key={note._id}>
-                                    <TableCell className="font-medium">{note.title}</TableCell>
-                                    <TableCell className="max-w-md truncate">{note.content}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end space-x-2">
-                                            <button
-                                                onClick={() => setSelectedNote(note)}
-                                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                                            >
-                                                <Eye className="h-4 w-4 mr-1" />
-                                                View
-                                            </button>
-                                            <button
-                                                onClick={() => handleEdit(note._id)}
-                                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                            >
-                                                <Pencil className="h-4 w-4 mr-1" />
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(note._id)}
-                                                className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                                            >
-                                                <Trash2 className="h-4 w-4 mr-1" />
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                            {filteredNotes.length === 0 && (
-                                <TableRow>
-                                    <TableCell colSpan={3} className="text-center py-8 text-gray-500">
-                                        {notes.length === 0 
-                                            ? "No notes yet. Create your first note!"
-                                            : "No notes found matching your search."}
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                {/* Notes Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredNotes.map((note) => (
+                        <div
+                            key={note._id}
+                            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 h-[150px] flex flex-col"
+                        >
+                            <div className="p-4 flex flex-col h-full">
+                                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-1">
+                                    {note.title}
+                                </h3>
+                                <p className="text-gray-600 text-sm line-clamp-3">
+                                    {note.content}
+                                </p>
+                                <div className="flex items-center justify-end gap-2 pt-2 mt-auto border-t">
+                                    <button
+                                        onClick={() => setSelectedNote(note)}
+                                        className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
+                                        title="View Note"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        onClick={() => handleEdit(note._id)}
+                                        className="p-2 text-gray-500 hover:text-blue-600 transition-colors"
+                                        title="Edit Note"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                                        </svg>
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(note._id)}
+                                        className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+                                        title="Delete Note"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    {filteredNotes.length === 0 && (
+                        <div className="col-span-full text-center py-8 text-gray-500">
+                            {notes.length === 0 
+                                ? "No notes yet. Create your first note!"
+                                : "No notes found matching your search."}
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -172,22 +174,16 @@ const NotesList = () => {
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
                     <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
                         <div className="flex justify-between items-center p-6 border-b">
-                            <h2 className="text-2xl font-bold text-gray-900">{selectedNote.title}</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 break-words">{selectedNote.title}</h2>
                             <button
                                 onClick={() => setSelectedNote(null)}
-                                className="text-gray-500 hover:text-gray-700"
+                                className="text-gray-500 hover:text-gray-700 flex-shrink-0 ml-4"
                             >
                                 ✕
                             </button>
                         </div>
-                        <div className="p-6 overflow-y-auto flex-grow">
-                            <div className="prose max-w-none">
-                                {selectedNote.content.split('\n').map((paragraph, index) => (
-                                    <p key={index} className="mb-4">
-                                        {paragraph}
-                                    </p>
-                                ))}
-                            </div>
+                        <div className="p-6 overflow-y-auto overflow-x-hidden flex-grow whitespace-pre-wrap break-words">
+                            {selectedNote.content}
                         </div>
                         <div className="p-6 border-t flex justify-end space-x-4">
                             <button
