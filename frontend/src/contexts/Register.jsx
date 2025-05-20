@@ -12,15 +12,25 @@ const Register = () => {
     const navigate = useNavigate();
     const { register } = useAuth();
 
+    const MIN_PASSWORD_LENGTH = 6;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Reset error state
+        setError('');
+
+        // Validate password length
+        if (password.length < MIN_PASSWORD_LENGTH) {
+            return setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters long`);
+        }
+
+        // Validate password match
         if (password !== confirmPassword) {
             return setError('Passwords do not match');
         }
 
         try {
-            setError('');
             setLoading(true);
             const result = await register(email, password);
             if (result.success) {
@@ -85,11 +95,13 @@ const Register = () => {
                                         type="password"
                                         autoComplete="new-password"
                                         required
+                                        minLength={MIN_PASSWORD_LENGTH}
                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
-                                        placeholder="Enter your password"
+                                        placeholder={`Enter your password (min ${MIN_PASSWORD_LENGTH} characters)`}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
+                                    
                                 </div>
                                 <div>
                                     <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">
@@ -101,6 +113,7 @@ const Register = () => {
                                         type="password"
                                         autoComplete="new-password"
                                         required
+                                        minLength={MIN_PASSWORD_LENGTH}
                                         className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 sm:text-sm"
                                         placeholder="Confirm your password"
                                         value={confirmPassword}
