@@ -122,9 +122,10 @@ const NotesList = () => {
                                 <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">
                                     {note.title}
                                 </h3>
-                                <p className="text-gray-600 text-sm line-clamp-3">
-                                    {note.content}
-                                </p>
+                                <div 
+                                    className="text-gray-600 text-sm line-clamp-3"
+                                    dangerouslySetInnerHTML={{ __html: note.content }}
+                                />
                                 <div className="flex items-center justify-end gap-2 pt-2 mt-auto border-t">
                                     <button
                                         onClick={() => setSelectedNote(note)}
@@ -174,9 +175,9 @@ const NotesList = () => {
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <div className="p-6 overflow-y-auto overflow-x-hidden flex-grow whitespace-pre-wrap break-words">
-                            {selectedNote.content}
-                        </div>
+                        <div className="p-6 overflow-y-auto overflow-x-hidden flex-grow whitespace-pre-wrap break-words"
+                            dangerouslySetInnerHTML={{ __html: selectedNote.content }}
+                        />
                         <div className="p-6 border-t flex justify-end space-x-4">
                             <Button
                                 onClick={() => handleEdit(selectedNote._id)}

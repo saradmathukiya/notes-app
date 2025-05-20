@@ -5,6 +5,8 @@ import { summarizeNote, checkGrammar } from '../services/aiService';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
 import { Button } from "./ui/button";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const EditNote = () => {
     const [title, setTitle] = useState('');
@@ -15,6 +17,32 @@ const EditNote = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const { id } = useParams();
+
+    // Quill editor modules configuration
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'font': [] }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'align': [] }],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            ['link'],
+            ['clean']
+        ],
+    };
+
+    // Quill editor formats
+    const formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike',
+        'color', 'background',
+        'font', 'size',
+        'align',
+        'list', 'bullet',
+        'link'
+    ];
 
     useEffect(() => {
         const fetchNote = async () => {
@@ -140,15 +168,17 @@ const EditNote = () => {
                         <label htmlFor="content" className="text-sm font-medium text-gray-700">
                             Content
                         </label>
-                        <textarea
-                            id="content"
-                            value={content}
-                            onChange={(e) => setContent(e.target.value)}
-                            rows="12"
-                            className="w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                            placeholder="Write your note content here..."
-                            required
-                        />
+                        <div className="h-[400px]">
+                            <ReactQuill
+                                theme="snow"
+                                value={content}
+                                onChange={setContent}
+                                modules={modules}
+                                formats={formats}
+                                className="h-[350px]"
+                                placeholder="Write your note content here..."
+                            />
+                        </div>
                     </div>
 
                     {grammarIssues.length > 0 && (
