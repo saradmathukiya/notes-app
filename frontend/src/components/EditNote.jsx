@@ -4,6 +4,7 @@ import { updateNote } from '../services/noteService';
 import { summarizeNote, checkGrammar } from '../services/aiService';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
+import { Button } from "./ui/button";
 
 const EditNote = () => {
     const [title, setTitle] = useState('');
@@ -179,20 +180,21 @@ const EditNote = () => {
                     )}
 
                     <div className="flex gap-4 pt-4">
-                        <button
+                        <Button
                             type="submit"
-                            className="flex-1 bg- text-white px-4 py-2 rounded-md bg-purple-700 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
+                            className="flex-1"
                         >
                             Update Note
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             type="button"
                             onClick={handleSummarize}
                             disabled={aiLoading}
-                            className="flex-1 bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            variant="success"
+                            className="flex-1"
                         >
                             {aiLoading ? 'Processing...' : 'Summarize'}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>

@@ -3,14 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Eye, Pencil, Trash2, Search, X } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from './ui/table';
+
+import { Button } from "./ui/button";
 
 const NotesList = () => {
     const [notes, setNotes] = useState([]);
@@ -80,18 +74,18 @@ const NotesList = () => {
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-gray-900">My Notes</h1>
                     <div className="flex space-x-4">
-                        <button
+                        <Button
                             onClick={() => navigate('/notes/create')}
-                            className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            variant="default"
                         >
                             Create Note
-                        </button>
-                        <button
+                        </Button>
+                        <Button
                             onClick={handleLogout}
-                            className="px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            variant="destructive"
                         >
                             Logout
-                        </button>
+                        </Button>
                     </div>
                 </div>
 
@@ -184,20 +178,20 @@ const NotesList = () => {
                             {selectedNote.content}
                         </div>
                         <div className="p-6 border-t flex justify-end space-x-4">
-                            <button
+                            <Button
                                 onClick={() => handleEdit(selectedNote._id)}
-                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                variant="default"
                             >
                                 <Pencil className="h-4 w-4 mr-2" />
                                 Edit Note
-                            </button>
-                            <button
+                            </Button>
+                            <Button
                                 onClick={() => handleDelete(selectedNote._id)}
-                                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                variant="destructive"
                             >
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 Delete Note
-                            </button>
+                            </Button>
                         </div>
                     </div>
                 </div>

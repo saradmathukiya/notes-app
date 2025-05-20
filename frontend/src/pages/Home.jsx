@@ -20,7 +20,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section */}
+      
       <header className="bg-gradient-to-r from-purple-700 to-blue-600 text-white">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
@@ -42,7 +42,7 @@ const Home = () => {
         </div>
       </header>
 
-      {/* Features */}
+      
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Powerful AI Features</h2>
@@ -71,7 +71,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA */}
+   
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to transform your notes?</h2>
@@ -96,7 +96,6 @@ const Home = () => {
   );
 };
 
-// Feature Card Component
 const FeatureCard = ({ title, description, icon }) => (
   <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
     <div className="mb-4">{icon}</div>
