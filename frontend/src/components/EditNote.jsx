@@ -121,6 +121,23 @@ const EditNote = () => {
         setGrammarIssues(prev => prev.filter(issue => issue.offset !== offset));
     };
 
+    const fixAllIssues = () => {
+        // Sort issues by offset in reverse order to avoid offset changes when applying corrections
+        const sortedIssues = [...grammarIssues].sort((a, b) => b.offset - a.offset);
+        
+        let newContent = content;
+        sortedIssues.forEach(issue => {
+            if (issue.replacements.length > 0) {
+                const before = newContent.substring(0, issue.offset);
+                const after = newContent.substring(issue.offset + issue.length);
+                newContent = before + issue.replacements[0].value + after;
+            }
+        });
+        
+        setContent(newContent);
+        setGrammarIssues([]);
+    };
+
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -183,7 +200,16 @@ const EditNote = () => {
 
                     {grammarIssues.length > 0 && (
                         <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4">
-                            <h3 className="text-lg font-medium text-yellow-800 mb-3">Grammar and Spelling Issues</h3>
+                            <div className="flex justify-between items-center mb-3">
+                                <h3 className="text-lg font-medium text-yellow-800">Grammar and Spelling Issues</h3>
+                                <Button
+                                    onClick={fixAllIssues}
+                                    variant="outline"
+                                    className="text-sm bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-300"
+                                >
+                                    Fix All
+                                </Button>
+                            </div>
                             <ul className="space-y-3">
                                 {grammarIssues.map((issue, index) => (
                                     <li key={index} className="text-sm">
