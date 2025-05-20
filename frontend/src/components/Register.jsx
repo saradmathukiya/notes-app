@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft } from 'lucide-react';
 
 const Register = () => {
@@ -60,7 +60,7 @@ const Register = () => {
                             <h2 className="text-3xl font-bold tracking-tight text-gray-900">
                                 Register
                             </h2>
-                            <div className="w-24"></div> {/* Spacer for alignment */}
+                            <div className="w-24"></div>
                         </div>
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             {error && (
@@ -101,7 +101,6 @@ const Register = () => {
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
-                                    
                                 </div>
                                 <div>
                                     <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700">

@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './components/PrivateRoute';
 import Login from './components/Login';
-import Register from './contexts/Register';
+import Register from './components/Register';
 import NotesList from './components/NotesList';
 import CreateNote from './components/CreateNote';
 import EditNote from './components/EditNote';
