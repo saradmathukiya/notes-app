@@ -15,6 +15,15 @@ router.post("/summarize", auth, async (req, res) => {
       return res.status(400).json({ message: "Content is required" });
     }
 
+    // Count the number of words
+    const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+
+    // If content has 10 or fewer words, return the original content as the summary
+    if (wordCount <= 10) {
+      return res.json({ summary: content });
+    }
+
+    // Proceed to summarize only if more than 10 words
     const result = await hf.summarization({
       model: "facebook/bart-large-cnn",
       inputs: content,
