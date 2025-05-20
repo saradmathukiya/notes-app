@@ -149,7 +149,7 @@ const CreateNote = () => {
                                 onChange={setContent}
                                 modules={modules}
                                 formats={formats}
-                                className="h-[350px]"
+                                className="h-[330px]"
                                 placeholder="Write your note content here..."
                             />
                         </div>
