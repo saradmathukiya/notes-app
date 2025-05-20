@@ -27,7 +27,7 @@ const NotesList = () => {
 
     const fetchNotes = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/notes');
+            const response = await axios.get('https://notes-backend-aq02.onrender.com/api/notes');
             setNotes(response.data);
             setLoading(false);
         } catch (err) {
@@ -38,7 +38,7 @@ const NotesList = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/api/notes/${id}`);
+            await axios.delete(`https://notes-backend-aq02.onrender.com/api/notes/${id}`);
             setNotes(notes.filter(note => note._id !== id));
             setSelectedNote(null);
         } catch (err) {

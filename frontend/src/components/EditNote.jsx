@@ -18,7 +18,7 @@ const EditNote = () => {
     useEffect(() => {
         const fetchNote = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/notes/${id}`);
+                const response = await axios.get(`https://notes-backend-aq02.onrender.com/api/notes/${id}`);
                 setTitle(response.data.title);
                 setContent(response.data.content);
                 setLoading(false);
