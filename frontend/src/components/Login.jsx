@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { ArrowLeft } from 'lucide-react';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -32,10 +33,18 @@ const Login = () => {
             <div className="w-full max-w-md">
                 <div className="bg-white rounded-lg shadow-lg border border-gray-200 p-8">
                     <div className="space-y-6">
-                        <div>
-                            <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">
-                                Sign in to your account
+                        <div className="flex items-center justify-between">
+                            <button
+                                onClick={() => navigate('/')}
+                                className="inline-flex items-center text-gray-600 hover:text-gray-900"
+                            >
+                                <ArrowLeft className="h-5 w-5 mr-2" />
+                                Back
+                            </button>
+                            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+                                Sign in
                             </h2>
+                            <div className="w-24"></div> {/* Spacer for alignment */}
                         </div>
                         <form className="space-y-6" onSubmit={handleSubmit}>
                             {error && (

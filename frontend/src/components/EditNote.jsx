@@ -165,7 +165,7 @@ const EditNote = () => {
                                                     <button
                                                         key={idx}
                                                         onClick={() => applyCorrection(issue.offset, issue.length, replacement.value)}
-                                                        className="px-2.5 py-1 text-xs bg-blue-100 text-blue-700 rounded-md hover:bg-blue-200 transition-colors"
+                                                        className="px-2.5 py-1 text-xs bg-purple-100 text-purple-600 rounded-md hover:bg-purple-200 transition-colors"
                                                     >
                                                         {replacement.value}
                                                     </button>
@@ -181,7 +181,7 @@ const EditNote = () => {
                     <div className="flex gap-4 pt-4">
                         <button
                             type="submit"
-                            className="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                            className="flex-1 bg- text-white px-4 py-2 rounded-md bg-purple-700 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-colors"
                         >
                             Update Note
                         </button>
