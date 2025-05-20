@@ -12,10 +12,22 @@ const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
 
+    const validateEmail = (email) => {
+        // Only allow letters, numbers, @, ., and underscore
+        const emailRegex = /^[a-zA-Z0-9._@]+$/;
+        return emailRegex.test(email);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             setError('');
+            
+            // Validate email format
+            if (!validateEmail(email)) {
+                return setError('Email can only contain letters, numbers, @, ., and underscore');
+            }
+
             setLoading(true);
             const result = await login(email, password);
             if (result.success) {

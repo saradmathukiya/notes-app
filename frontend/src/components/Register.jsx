@@ -15,11 +15,22 @@ const Register = () => {
 
     const MIN_PASSWORD_LENGTH = 6;
 
+    const validateEmail = (email) => {
+        // Only allow letters, numbers, @, ., and underscore
+        const emailRegex = /^[a-zA-Z0-9._@]+$/;
+        return emailRegex.test(email);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Reset error state
         setError('');
+
+        // Validate email format
+        if (!validateEmail(email)) {
+            return setError('Email can only contain letters, numbers, @, ., and underscore');
+        }
 
         // Validate password length
         if (password.length < MIN_PASSWORD_LENGTH) {
