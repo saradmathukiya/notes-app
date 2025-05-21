@@ -2,8 +2,30 @@ const router = require("express").Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
+// Input validation middleware
+const validateInput = (req, res, next) => {
+  const { email, password } = req.body;
+
+  // Email validation
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!email || !emailRegex.test(email)) {
+    return res
+      .status(400)
+      .json({ message: "Please provide a valid email address" });
+  }
+
+  // Password validation
+  if (!password || password.length < 6) {
+    return res
+      .status(400)
+      .json({ message: "Password must be at least 6 characters long" });
+  }
+
+  next();
+};
+
 // Register
-router.post("/register", async (req, res) => {
+router.post("/register", validateInput, async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -40,7 +62,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/login", validateInput, async (req, res) => {
   try {
     const { email, password } = req.body;
 

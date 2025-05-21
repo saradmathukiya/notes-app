@@ -11,22 +11,33 @@ router.post("/summarize", auth, async (req, res) => {
   try {
     const { content } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
+    // Check if content exists and is not just whitespace/HTML
+    const strippedContent = content.replace(/<[^>]*>/g, "").trim();
+    if (!strippedContent) {
+      return res
+        .status(400)
+        .json({ message: "Content is required and cannot be empty" });
+    }
+
+    // Check minimum content length
+    if (strippedContent.length < 10) {
+      return res
+        .status(400)
+        .json({ message: "Content must be at least 10 characters long" });
     }
 
     // Count the number of words
-    const wordCount = content.trim().split(/\s+/).filter(Boolean).length;
+    const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
 
     // If content has 10 or fewer words, return the original content as the summary
     if (wordCount <= 10) {
-      return res.json({ summary: content });
+      return res.json({ summary: strippedContent });
     }
 
     // Proceed to summarize only if more than 10 words
     const result = await hf.summarization({
       model: "facebook/bart-large-cnn",
-      inputs: content,
+      inputs: strippedContent,
       parameters: {
         max_length: 130,
         min_length: 30,
@@ -38,7 +49,13 @@ router.post("/summarize", auth, async (req, res) => {
       throw new Error("Invalid response from AI model");
     }
 
-    res.json({ summary: result.summary_text });
+    // Clean the summary of any HTML tags
+    let cleanSummary = result.summary_text
+      .replace(/<[^>]*>/g, "") // Remove HTML tags
+      .replace(/^```\w*\n?|\n?```$/g, "") // Remove code block markers
+      .trim();
+
+    res.json({ summary: cleanSummary });
   } catch (error) {
     console.error("Error in summarize:", error);
     res.status(500).json({
@@ -90,8 +107,19 @@ router.post("/style-transform", auth, async (req, res) => {
   try {
     const { content, style } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Content is required" });
+    // Check if content exists and is not just whitespace/HTML
+    const strippedContent = content.replace(/<[^>]*>/g, "").trim();
+    if (!strippedContent) {
+      return res
+        .status(400)
+        .json({ message: "Content is required and cannot be empty" });
+    }
+
+    // Check minimum content length
+    if (strippedContent.length < 10) {
+      return res
+        .status(400)
+        .json({ message: "Content must be at least 10 characters long" });
     }
 
     if (!style) {
@@ -111,7 +139,7 @@ router.post("/style-transform", auth, async (req, res) => {
     }
 
     // Create prompt for OpenRouter API
-    const prompt = `Rewrite the following text in a ${style} style. Do not include any HTML tags or formatting in your response:\n\n${content}`;
+    const prompt = `Rewrite the following text in a ${style} style. Do not include any HTML tags or formatting in your response:\n\n${strippedContent}`;
 
     // Make request to OpenRouter AI
     const response = await axios.post(

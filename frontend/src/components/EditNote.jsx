@@ -106,8 +106,16 @@ const EditNote = () => {
     };
 
     const handleSummarize = async () => {
-        if (!content) {
-            setError('Please add some content to summarize');
+        // Check if content is empty or only contains whitespace/HTML tags
+        const strippedContent = content.replace(/<[^>]*>/g, '').trim();
+        if (!strippedContent) {
+            setError('Please add some meaningful content to summarize');
+            return;
+        }
+
+        // Check if content is too short
+        if (strippedContent.length < 10) {
+            setError('Content must be at least 10 characters long to summarize');
             return;
         }
 
@@ -129,8 +137,16 @@ const EditNote = () => {
     };
 
     const handleStyleTransform = async () => {
-        if (!content) {
-            setError('Please add some content to transform');
+        // Check if content is empty or only contains whitespace/HTML tags
+        const strippedContent = content.replace(/<[^>]*>/g, '').trim();
+        if (!strippedContent) {
+            setError('Please add some meaningful content to transform');
+            return;
+        }
+
+        // Check if content is too short
+        if (strippedContent.length < 10) {
+            setError('Content must be at least 10 characters long to transform');
             return;
         }
 
@@ -188,7 +204,7 @@ const EditNote = () => {
                         onClick={() => navigate('/notes')}
                         className="text-sm text-gray-500 hover:text-gray-700"
                     >
-                        ← Back to Notes
+                        ← Back
                     </button>
                 </div>
 
@@ -264,7 +280,9 @@ const EditNote = () => {
                                 <X size={18} />
                             </button>
                             <h3 className="text-lg font-medium text-blue-800 mb-2">Summary</h3>
-                            <p className="text-blue-700 whitespace-pre-wrap">{summary}</p>
+                            <p className="text-blue-700 whitespace-pre-wrap">
+                                {summary.replace(/<[^>]*>/g, '')}
+                            </p>
                         </div>
                     )}
 

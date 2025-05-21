@@ -13,8 +13,8 @@ const Login = () => {
     const { login } = useAuth();
 
     const validateEmail = (email) => {
-        // Only allow letters, numbers, @, ., and underscore
-        const emailRegex = /^[a-zA-Z0-9._@]+$/;
+        // More accurate email validation regex
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailRegex.test(email);
     };
 
@@ -25,7 +25,12 @@ const Login = () => {
             
             // Validate email format
             if (!validateEmail(email)) {
-                return setError('Email can only contain letters, numbers, @, ., and underscore');
+                return setError('Please enter a valid email address');
+            }
+
+            // Validate password length
+            if (password.length < 6) {
+                return setError('Password must be at least 6 characters long');
             }
 
             setLoading(true);

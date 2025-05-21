@@ -31,8 +31,27 @@ router.get("/:id", auth, async (req, res) => {
   }
 });
 
+// Input validation middleware
+const validateNote = (req, res, next) => {
+  const { title, content } = req.body;
+
+  if (!title || title.trim().length === 0) {
+    return res.status(400).json({ message: "Title is required" });
+  }
+
+  if (!content || content.trim().length === 0) {
+    return res.status(400).json({ message: "Content is required" });
+  }
+
+  // Sanitize input
+  req.body.title = title.trim();
+  req.body.content = content.trim();
+
+  next();
+};
+
 // Create a new note
-router.post("/", auth, async (req, res) => {
+router.post("/", auth, validateNote, async (req, res) => {
   try {
     const { title, content } = req.body;
     const note = new Note({
@@ -50,7 +69,7 @@ router.post("/", auth, async (req, res) => {
 });
 
 // Update a note
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", auth, validateNote, async (req, res) => {
   try {
     const { title, content } = req.body;
     const note = await Note.findOne({ _id: req.params.id, user: req.user.id });
