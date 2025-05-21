@@ -88,8 +88,17 @@ const NotesList = () => {
     return (
         <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
             <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notes App</h1>
+                <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
+                    <div className="flex justify-between items-center w-full sm:w-auto">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center sm:text-left">Notes App</h1>
+                        <Button
+                            onClick={handleLogout}
+                            variant="outline"
+                            className="sm:hidden border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
+                        >
+                            Logout
+                        </Button>
+                    </div>
                     <div className="flex flex-wrap gap-2 sm:gap-4 w-full sm:w-auto">
                         <Button
                             onClick={() => setViewMode(viewMode === 'card' ? 'table' : 'card')}
@@ -117,8 +126,8 @@ const NotesList = () => {
                         </Button>
                         <Button
                             onClick={handleLogout}
-                            variant="destructive"
-                            className="flex-1 sm:flex-none"
+                            variant="outline"
+                            className="hidden sm:flex border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-300"
                         >
                             Logout
                         </Button>
