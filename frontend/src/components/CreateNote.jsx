@@ -127,9 +127,10 @@ const CreateNote = () => {
             return;
         }
 
-        // Check if content is too short
-        if (strippedContent.length < 10) {
-            setError('Content must be at least 10 characters long to transform');
+        // Count words
+        const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
+        if (wordCount <= 10) {
+            setError('Content must be more than 10 words to transform');
             return;
         }
 

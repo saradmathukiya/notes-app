@@ -115,11 +115,12 @@ router.post("/style-transform", auth, async (req, res) => {
         .json({ message: "Content is required and cannot be empty" });
     }
 
-    // Check minimum content length
-    if (strippedContent.length < 10) {
+    // Count words
+    const wordCount = strippedContent.split(/\s+/).filter(Boolean).length;
+    if (wordCount <= 10) {
       return res
         .status(400)
-        .json({ message: "Content must be at least 10 characters long" });
+        .json({ message: "Content must be more than 10 words to transform" });
     }
 
     if (!style) {

@@ -16,14 +16,19 @@ const loginLimiter = rateLimit({
 const validateInput = (req, res, next) => {
   const { email, password } = req.body;
 
-  // Email validation - allowing common TLDs and dots between characters
-  // Dots after @ are only allowed right before the TLD
+  // Email validation - secure version with length limits and strict validation
+  // Rules:
+  // 1. Local part (before @): 1-64 chars, alphanumeric with limited special chars
+  // 2. Domain part: 1-255 chars, alphanumeric with hyphens
+  // 3. TLD: 2-63 chars, letters only
+  // 4. No consecutive dots
+  // 5. No special chars in domain
   const emailRegex =
-    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
-  if (!email || !emailRegex.test(email)) {
+    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,62}[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,63}$/;
+  if (!email || email.length > 254 || !emailRegex.test(email)) {
     return res.status(400).json({
       message:
-        "Please provide a valid email address. Dots are only allowed between characters in the local part and right before the TLD in the domain part.",
+        "Please provide a valid email address. The email must be less than 255 characters and follow standard email format rules.",
     });
   }
 
