@@ -242,7 +242,7 @@ const EditNote = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className="h-[400px]">
+                        <div className="h-[450px]">
                             <ReactQuill
                                 theme="snow"
                                 value={content}
