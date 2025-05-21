@@ -86,37 +86,39 @@ const NotesList = () => {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900">Notes</h1>
-                    <div className="flex space-x-4">
+        <div className="min-h-screen bg-gray-50 py-4 sm:py-8">
+            <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-6 sm:mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Notes App</h1>
+                    <div className="flex flex-wrap gap-2 sm:gap-4 w-full sm:w-auto">
                         <Button
                             onClick={() => setViewMode(viewMode === 'card' ? 'table' : 'card')}
                             variant="outline"
-                            className="flex items-center gap-2"
+                            className="flex items-center gap-2 flex-1 sm:flex-none"
                         >
                             {viewMode === 'card' ? (
                                 <>
                                     <Table className="h-4 w-4" />
-                                    Table View
+                                    <span className="hidden sm:inline">Table View</span>
                                 </>
                             ) : (
                                 <>
                                     <LayoutGrid className="h-4 w-4" />
-                                    Card View
+                                    <span className="hidden sm:inline">Card View</span>
                                 </>
                             )}
                         </Button>
                         <Button
                             onClick={() => navigate('/notes/create')}
                             variant="default"
+                            className="flex-1 sm:flex-none"
                         >
                             Create Note
                         </Button>
                         <Button
                             onClick={handleLogout}
                             variant="destructive"
+                            className="flex-1 sm:flex-none"
                         >
                             Logout
                         </Button>
@@ -191,22 +193,24 @@ const NotesList = () => {
                     </div>
                 ) : (
                     // Table View
-                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-x-auto">
                         <ShadcnTable>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Title</TableHead>
-                                    <TableHead>Content</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
+                                    <TableHead className="w-[30%]">Title</TableHead>
+                                    <TableHead className="w-[50%]">Content</TableHead>
+                                    <TableHead className="w-[20%] text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {filteredNotes.map((note) => (
                                     <TableRow key={note._id}>
-                                        <TableCell className="font-medium">{note.title}</TableCell>
+                                        <TableCell className="font-medium max-w-[200px] truncate">
+                                            {note.title}
+                                        </TableCell>
                                         <TableCell>
                                             <div 
-                                                className="line-clamp-2"
+                                                className="line-clamp-2 max-w-[400px]"
                                                 dangerouslySetInnerHTML={{ __html: note.content }}
                                             />
                                         </TableCell>
@@ -253,24 +257,27 @@ const NotesList = () => {
 
             {/* View Note Modal */}
             {selectedNote && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] flex flex-col">
-                        <div className="flex justify-between items-center p-6 border-b">
-                            <h2 className="text-2xl font-bold text-gray-900 break-words">{selectedNote.title}</h2>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-2 sm:p-4">
+                    <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+                        <div className="flex justify-between items-center p-4 sm:p-6 border-b">
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 break-words pr-4">
+                                {selectedNote.title}
+                            </h2>
                             <button
                                 onClick={() => setSelectedNote(null)}
-                                className="text-gray-500 hover:text-gray-700 flex-shrink-0 ml-4"
+                                className="text-gray-500 hover:text-gray-700 flex-shrink-0"
                             >
                                 <X className="h-5 w-5" />
                             </button>
                         </div>
-                        <div className="p-6 overflow-y-auto overflow-x-hidden flex-grow whitespace-pre-wrap break-words"
+                        <div className="p-4 sm:p-6 overflow-y-auto overflow-x-hidden flex-grow whitespace-pre-wrap break-words"
                             dangerouslySetInnerHTML={{ __html: selectedNote.content }}
                         />
-                        <div className="p-6 border-t flex justify-end space-x-4">
+                        <div className="p-4 sm:p-6 border-t flex flex-col sm:flex-row justify-end gap-2 sm:gap-4">
                             <Button
                                 onClick={() => handleEdit(selectedNote._id)}
                                 variant="default"
+                                className="w-full sm:w-auto"
                             >
                                 <Pencil className="h-4 w-4 mr-2" />
                                 Edit Note
@@ -278,6 +285,7 @@ const NotesList = () => {
                             <Button
                                 onClick={() => handleDelete(selectedNote._id)}
                                 variant="destructive"
+                                className="w-full sm:w-auto"
                             >
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 Delete Note
