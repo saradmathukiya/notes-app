@@ -6,6 +6,7 @@ import debounce from 'lodash/debounce';
 import { Button } from "./ui/button";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { X } from 'lucide-react';
 
 const CreateNote = () => {
     const [title, setTitle] = useState('');
@@ -14,6 +15,7 @@ const CreateNote = () => {
     const [aiLoading, setAiLoading] = useState(false);
     const [grammarIssues, setGrammarIssues] = useState([]);
     const [selectedStyle, setSelectedStyle] = useState('professional');
+    const [summary, setSummary] = useState('');
     const navigate = useNavigate();
 
     const supportedStyles = [
@@ -95,13 +97,17 @@ const CreateNote = () => {
         setError('');
 
         try {
-            const { summary } = await summarizeNote(content);
-            setContent(prev => `${prev}\n\nSummary:\n${summary}`);
+            const { summary: newSummary } = await summarizeNote(content);
+            setSummary(newSummary);
         } catch (error) {
             setError('Failed to summarize note');
         } finally {
             setAiLoading(false);
         }
+    };
+
+    const handleDeleteSummary = () => {
+        setSummary('');
     };
 
     const handleStyleTransform = async () => {
@@ -222,6 +228,19 @@ const CreateNote = () => {
                             />
                         </div>
                     </div>
+
+                    {summary && (
+                        <div className="rounded-lg bg-blue-50 border border-blue-200 p-4 relative">
+                            <button
+                                onClick={handleDeleteSummary}
+                                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+                            >
+                                <X size={18} />
+                            </button>
+                            <h3 className="text-lg font-medium text-blue-800 mb-2">Summary</h3>
+                            <p className="text-blue-700 whitespace-pre-wrap">{summary}</p>
+                        </div>
+                    )}
 
                     {grammarIssues.length > 0 && (
                         <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4 mt-14">
