@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, Pencil, Trash2, Search, X, LayoutGrid, Table } from 'lucide-react';
+import { Eye, Pencil, Trash2, Search, X, LayoutGrid, Table, Plus } from 'lucide-react';
 
 import { Button } from "./ui/button";
 import {
@@ -103,7 +103,7 @@ const NotesList = () => {
                         <Button
                             onClick={() => navigate('/notes/create')}
                             variant="default"
-                            className="flex-1 sm:flex-none"
+                            className="hidden sm:flex"
                         >
                             Create Note
                         </Button>
@@ -305,6 +305,15 @@ const NotesList = () => {
                     </div>
                 </div>
             )}
+
+            {/* Floating Action Button for Mobile */}
+            <Button
+                onClick={() => navigate('/notes/create')}
+                variant="default"
+                className="fixed bottom-6 right-6 sm:hidden w-14 h-14 rounded-full shadow-lg flex items-center justify-center"
+            >
+                <Plus className="h-6 w-6" />
+            </Button>
         </div>
     );
 };
