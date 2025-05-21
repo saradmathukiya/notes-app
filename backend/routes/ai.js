@@ -173,8 +173,12 @@ router.post("/style-transform", auth, async (req, res) => {
     // Remove any HTML tags that might still be present
     transformedText = transformedText.replace(/<[^>]*>/g, "");
 
-    // Remove code block markers (```) from start and end
-    transformedText = transformedText.replace(/^```\w*\n?|\n?```$/g, "");
+    // Remove code block markers (```) and backticks (`) from start and end
+    transformedText = transformedText
+      .replace(/^```\w*\n?|\n?```$/g, "") // Remove code block markers
+      .replace(/^`|`$/g, "") // Remove single backticks at start/end
+      .replace(/`/g, "'") // Replace any remaining backticks with single quotes
+      .trim();
 
     res.json({ transformedText });
   } catch (error) {

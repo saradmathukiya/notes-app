@@ -155,7 +155,11 @@ const EditNote = () => {
 
         try {
             const { transformedText } = await transformStyle(content, selectedStyle);
-            setContent(transformedText);
+            // Clean any remaining backticks
+            const cleanText = transformedText
+                .replace(/^`|`$/g, '') // Remove single backticks at start/end
+                .replace(/`/g, "'"); // Replace any remaining backticks with single quotes
+            setContent(cleanText);
         } catch (error) {
             setError('Failed to transform text style');
         } finally {
@@ -251,7 +255,6 @@ const EditNote = () => {
                                     type="button"
                                     onClick={handleStyleTransform}
                                     disabled={aiLoading}
-                                    variant="outline"
                                     className="text-sm"
                                 >
                                     {aiLoading ? 'Transforming...' : 'Transform Style'}
