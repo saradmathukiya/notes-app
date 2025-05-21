@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from "./ui/button";
+import { validateEmail } from '../utils/validation';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -12,12 +13,6 @@ const Login = () => {
     const navigate = useNavigate();
     const { login } = useAuth();
 
-    const validateEmail = (email) => {
-        // More accurate email validation regex
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return emailRegex.test(email);
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -26,11 +21,6 @@ const Login = () => {
             // Validate email format
             if (!validateEmail(email)) {
                 return setError('Please enter a valid email address');
-            }
-
-            // Validate password length
-            if (password.length < 6) {
-                return setError('Password must be at least 6 characters long');
             }
 
             setLoading(true);
