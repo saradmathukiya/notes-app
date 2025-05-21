@@ -123,6 +123,15 @@ router.post("/style-transform", auth, async (req, res) => {
         .json({ message: "Content must be more than 10 words to transform" });
     }
 
+    // Add maximum content length check
+    const MAX_CONTENT_LENGTH = 5000; // characters
+    if (strippedContent.length > MAX_CONTENT_LENGTH) {
+      return res.status(400).json({
+        message: `Content is too long. Maximum length is ${MAX_CONTENT_LENGTH} characters.`,
+        maxLength: MAX_CONTENT_LENGTH,
+      });
+    }
+
     if (!style) {
       return res.status(400).json({ message: "Style is required" });
     }
@@ -142,7 +151,7 @@ router.post("/style-transform", auth, async (req, res) => {
     // Create prompt for OpenRouter API
     const prompt = `Rewrite the following text in a ${style} style. Do not include any HTML tags or formatting in your response:\n\n${strippedContent}`;
 
-    // Make request to OpenRouter AI
+    // Make request to OpenRouter AI with response size limits
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
@@ -151,7 +160,7 @@ router.post("/style-transform", auth, async (req, res) => {
           {
             role: "system",
             content:
-              "You are a helpful assistant that rewrites text in different styles. Never include HTML tags or formatting in your responses.",
+              "You are a helpful assistant that rewrites text in different styles. Never include HTML tags or formatting in your responses. Keep responses concise and within reasonable length.",
           },
           {
             role: "user",
@@ -159,7 +168,9 @@ router.post("/style-transform", auth, async (req, res) => {
           },
         ],
         temperature: 0.7,
-        max_tokens: 2000,
+        max_tokens: 2000, // Limit response size
+        presence_penalty: 0.6, // Encourage more concise responses
+        frequency_penalty: 0.3, // Reduce repetition
       },
       {
         headers: {
@@ -170,6 +181,14 @@ router.post("/style-transform", auth, async (req, res) => {
     );
 
     let transformedText = response.data.choices[0].message.content.trim();
+
+    // Check if response is too large
+    const MAX_RESPONSE_LENGTH = 4000; // characters
+    if (transformedText.length > MAX_RESPONSE_LENGTH) {
+      // Truncate the response and add an ellipsis
+      transformedText =
+        transformedText.substring(0, MAX_RESPONSE_LENGTH) + "...";
+    }
 
     // Remove any HTML tags that might still be present
     transformedText = transformedText.replace(/<[^>]*>/g, "");
@@ -187,6 +206,21 @@ router.post("/style-transform", auth, async (req, res) => {
       "Error in style transform:",
       error.response?.data || error.message
     );
+
+    // Handle specific error cases
+    if (error.response?.status === 413) {
+      return res.status(413).json({
+        message:
+          "The response from the AI model was too large. Please try with a shorter text.",
+      });
+    }
+
+    if (error.response?.status === 429) {
+      return res.status(429).json({
+        message: "Too many requests. Please try again later.",
+      });
+    }
+
     res.status(500).json({
       message: "Error transforming text style",
       error: error.message,

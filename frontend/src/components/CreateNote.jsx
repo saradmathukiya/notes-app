@@ -134,6 +134,12 @@ const CreateNote = () => {
             return;
         }
 
+        // Check content length
+        if (strippedContent.length > 5000) {
+            setError('Content is too long. Maximum length is 5000 characters.');
+            return;
+        }
+
         setTransformLoading(true);
         setError('');
 
@@ -145,7 +151,13 @@ const CreateNote = () => {
                 .replace(/`/g, "'"); // Replace any remaining backticks with single quotes
             setContent(cleanText);
         } catch (error) {
-            setError('Failed to transform text style');
+            if (error.response?.status === 413) {
+                setError('The response was too large. Please try with a shorter text.');
+            } else if (error.response?.status === 429) {
+                setError('Too many requests. Please try again later.');
+            } else {
+                setError(error.response?.data?.message || 'Failed to transform text style');
+            }
         } finally {
             setTransformLoading(false);
         }
