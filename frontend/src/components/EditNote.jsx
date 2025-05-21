@@ -13,7 +13,8 @@ const EditNote = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [error, setError] = useState('');
-    const [aiLoading, setAiLoading] = useState(false);
+    const [transformLoading, setTransformLoading] = useState(false);
+    const [summarizeLoading, setSummarizeLoading] = useState(false);
     const [grammarIssues, setGrammarIssues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedStyle, setSelectedStyle] = useState('professional');
@@ -119,7 +120,7 @@ const EditNote = () => {
             return;
         }
 
-        setAiLoading(true);
+        setSummarizeLoading(true);
         setError('');
 
         try {
@@ -128,7 +129,7 @@ const EditNote = () => {
         } catch (error) {
             setError('Failed to summarize note');
         } finally {
-            setAiLoading(false);
+            setSummarizeLoading(false);
         }
     };
 
@@ -150,7 +151,7 @@ const EditNote = () => {
             return;
         }
 
-        setAiLoading(true);
+        setTransformLoading(true);
         setError('');
 
         try {
@@ -163,7 +164,7 @@ const EditNote = () => {
         } catch (error) {
             setError('Failed to transform text style');
         } finally {
-            setAiLoading(false);
+            setTransformLoading(false);
         }
     };
 
@@ -254,14 +255,14 @@ const EditNote = () => {
                                 <Button
                                     type="button"
                                     onClick={handleStyleTransform}
-                                    disabled={aiLoading}
+                                    disabled={transformLoading}
                                     className="text-sm"
                                 >
-                                    {aiLoading ? 'Transforming...' : 'Transform Style'}
+                                    {transformLoading ? 'Transforming...' : 'Transform Style'}
                                 </Button>
                             </div>
                         </div>
-                        <div className="h-[410px]">
+                        <div className="h-[390px]">
                             <ReactQuill
                                 theme="snow"
                                 value={content}
@@ -336,11 +337,11 @@ const EditNote = () => {
                         <Button
                             type="button"
                             onClick={handleSummarize}
-                            disabled={aiLoading}
+                            disabled={summarizeLoading}
                             variant="success"
                             className="flex-1"
                         >
-                            {aiLoading ? 'Processing...' : 'Summarize'}
+                            {summarizeLoading ? 'Processing...' : 'Summarize'}
                         </Button>
                     </div>
                 </form>
