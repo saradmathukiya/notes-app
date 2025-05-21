@@ -2,9 +2,17 @@ import { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Eye, Pencil, Trash2, Search, X } from 'lucide-react';
+import { Eye, Pencil, Trash2, Search, X, LayoutGrid, Table } from 'lucide-react';
 
 import { Button } from "./ui/button";
+import {
+    Table as ShadcnTable,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "./ui/table";
 
 const NotesList = () => {
     const [notes, setNotes] = useState([]);
@@ -12,8 +20,17 @@ const NotesList = () => {
     const [error, setError] = useState('');
     const [selectedNote, setSelectedNote] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
+    const [viewMode, setViewMode] = useState(() => {
+        // Initialize viewMode from localStorage or default to 'card'
+        return localStorage.getItem('notesViewMode') || 'card';
+    });
     const { logout } = useAuth();
     const navigate = useNavigate();
+
+    // Update localStorage when viewMode changes
+    useEffect(() => {
+        localStorage.setItem('notesViewMode', viewMode);
+    }, [viewMode]);
 
     useEffect(() => {
         fetchNotes();
@@ -75,6 +92,23 @@ const NotesList = () => {
                     <h1 className="text-3xl font-bold text-gray-900">My Notes</h1>
                     <div className="flex space-x-4">
                         <Button
+                            onClick={() => setViewMode(viewMode === 'card' ? 'table' : 'card')}
+                            variant="outline"
+                            className="flex items-center gap-2"
+                        >
+                            {viewMode === 'card' ? (
+                                <>
+                                    <Table className="h-4 w-4" />
+                                    Table View
+                                </>
+                            ) : (
+                                <>
+                                    <LayoutGrid className="h-4 w-4" />
+                                    Card View
+                                </>
+                            )}
+                        </Button>
+                        <Button
                             onClick={() => navigate('/notes/create')}
                             variant="default"
                         >
@@ -111,55 +145,110 @@ const NotesList = () => {
                     </div>
                 </div>
 
-                {/* Notes Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {filteredNotes.map((note) => (
-                        <div
-                            key={note._id}
-                            className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 h-[150px] flex flex-col"
-                        >
-                            <div className="p-4 flex flex-col h-full">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">
-                                    {note.title}
-                                </h3>
-                                <div 
-                                    className="text-gray-600 text-sm line-clamp-3"
-                                    dangerouslySetInnerHTML={{ __html: note.content }}
-                                />
-                                <div className="flex items-center justify-end gap-2 pt-2 mt-auto border-t">
-                                    <button
-                                        onClick={() => setSelectedNote(note)}
-                                        className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
-                                        title="View Note"
-                                    >
-                                        <Eye className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleEdit(note._id)}
-                                        className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
-                                        title="Edit Note"
-                                    >
-                                        <Pencil className="h-5 w-5" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(note._id)}
-                                        className="p-2 text-gray-500 hover:text-red-600 transition-colors"
-                                        title="Delete Note"
-                                    >
-                                        <Trash2 className="h-5 w-5" />
-                                    </button>
+                {/* Notes Display */}
+                {viewMode === 'card' ? (
+                    // Card View
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                        {filteredNotes.map((note) => (
+                            <div
+                                key={note._id}
+                                className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-200 h-[150px] flex flex-col"
+                            >
+                                <div className="p-4 flex flex-col h-full">
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-1 line-clamp-1">
+                                        {note.title}
+                                    </h3>
+                                    <div 
+                                        className="text-gray-600 text-sm line-clamp-3"
+                                        dangerouslySetInnerHTML={{ __html: note.content }}
+                                    />
+                                    <div className="flex items-center justify-end gap-2 pt-2 mt-auto border-t">
+                                        <button
+                                            onClick={() => setSelectedNote(note)}
+                                            className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
+                                            title="View Note"
+                                        >
+                                            <Eye className="h-5 w-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleEdit(note._id)}
+                                            className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
+                                            title="Edit Note"
+                                        >
+                                            <Pencil className="h-5 w-5" />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDelete(note._id)}
+                                            className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+                                            title="Delete Note"
+                                        >
+                                            <Trash2 className="h-5 w-5" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                    {filteredNotes.length === 0 && (
-                        <div className="col-span-full text-center py-8 text-gray-500">
-                            {notes.length === 0 
-                                ? "No notes yet. Create your first note!"
-                                : "No notes found matching your search."}
-                        </div>
-                    )}
-                </div>
+                        ))}
+                    </div>
+                ) : (
+                    // Table View
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                        <ShadcnTable>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Title</TableHead>
+                                    <TableHead>Content</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {filteredNotes.map((note) => (
+                                    <TableRow key={note._id}>
+                                        <TableCell className="font-medium">{note.title}</TableCell>
+                                        <TableCell>
+                                            <div 
+                                                className="line-clamp-2"
+                                                dangerouslySetInnerHTML={{ __html: note.content }}
+                                            />
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <button
+                                                    onClick={() => setSelectedNote(note)}
+                                                    className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
+                                                    title="View Note"
+                                                >
+                                                    <Eye className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleEdit(note._id)}
+                                                    className="p-2 text-gray-500 hover:text-purple-600 transition-colors"
+                                                    title="Edit Note"
+                                                >
+                                                    <Pencil className="h-5 w-5" />
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDelete(note._id)}
+                                                    className="p-2 text-gray-500 hover:text-red-600 transition-colors"
+                                                    title="Delete Note"
+                                                >
+                                                    <Trash2 className="h-5 w-5" />
+                                                </button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </ShadcnTable>
+                    </div>
+                )}
+
+                {filteredNotes.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                        {notes.length === 0 
+                            ? "No notes yet. Create your first note!"
+                            : "No notes found matching your search."}
+                    </div>
+                )}
             </div>
 
             {/* View Note Modal */}
