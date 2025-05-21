@@ -261,14 +261,14 @@ const EditNote = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className="h-[450px]">
+                        <div className="h-[410px]">
                             <ReactQuill
                                 theme="snow"
                                 value={content}
                                 onChange={setContent}
                                 modules={modules}
                                 formats={formats}
-                                className="h-[350px]"
+                                className="h-[300px]"
                                 placeholder="Write your note content here..."
                             />
                         </div>
@@ -292,11 +292,11 @@ const EditNote = () => {
                     {grammarIssues.length > 0 && (
                         <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4">
                             <div className="flex justify-between items-center mb-3">
-                                <h3 className="text-lg font-medium text-yellow-800">Grammar and Spelling Issues</h3>
+                                <h3 className="text-base sm:text-lg font-medium text-yellow-800">Grammar and Spelling Issues</h3>
                                 <Button
                                     onClick={fixAllIssues}
                                     variant="outline"
-                                    className="text-sm bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-300"
+                                    className="text-xs sm:text-sm bg-yellow-100 text-yellow-800 hover:bg-yellow-200 border-yellow-300"
                                 >
                                     Fix All
                                 </Button>
