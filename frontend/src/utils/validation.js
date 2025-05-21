@@ -7,10 +7,10 @@ export const PASSWORD_RULES = {
   requireSpecialChar: true,
 };
 
-// Email validation regex - only allowing .com domains and dots between characters
-// Dots after @ are only allowed right before .com
+// Email validation regex - allowing common TLDs and dots between characters
+// Dots after @ are only allowed right before the TLD
 export const EMAIL_REGEX =
-  /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9]+\.com$/;
+  /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
 
 // Password validation function
 export const validatePassword = (password) => {

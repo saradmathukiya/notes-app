@@ -16,14 +16,14 @@ const loginLimiter = rateLimit({
 const validateInput = (req, res, next) => {
   const { email, password } = req.body;
 
-  // Email validation - only allowing .com domains and dots between characters
-  // Dots after @ are only allowed right before .com
+  // Email validation - allowing common TLDs and dots between characters
+  // Dots after @ are only allowed right before the TLD
   const emailRegex =
-    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9]+\.com$/;
+    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]*[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]\.[a-zA-Z]{2,}$/;
   if (!email || !emailRegex.test(email)) {
     return res.status(400).json({
       message:
-        "Please provide a valid .com email address. Dots are only allowed between characters in the local part and right before .com in the domain part.",
+        "Please provide a valid email address. Dots are only allowed between characters in the local part and right before the TLD in the domain part.",
     });
   }
 
