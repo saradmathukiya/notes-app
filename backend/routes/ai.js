@@ -85,4 +85,80 @@ router.post("/check", auth, async (req, res) => {
   }
 });
 
+// Transform text style
+router.post("/style-transform", auth, async (req, res) => {
+  try {
+    const { content, style } = req.body;
+
+    if (!content) {
+      return res.status(400).json({ message: "Content is required" });
+    }
+
+    if (!style) {
+      return res.status(400).json({ message: "Style is required" });
+    }
+
+    const supportedStyles = [
+      "casual",
+      "professional",
+      "creativity",
+      "friendly",
+    ];
+    if (!supportedStyles.includes(style.toLowerCase())) {
+      return res.status(400).json({
+        message: `Style must be one of: ${supportedStyles.join(", ")}`,
+      });
+    }
+
+    // Create prompt for OpenRouter API
+    const prompt = `Rewrite the following text in a ${style} style. Do not include any HTML tags or formatting in your response:\n\n${content}`;
+
+    // Make request to OpenRouter AI
+    const response = await axios.post(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        model: "deepseek/deepseek-prover-v2:free",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a helpful assistant that rewrites text in different styles. Never include HTML tags or formatting in your responses.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 2000,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    let transformedText = response.data.choices[0].message.content.trim();
+
+    // Remove any HTML tags that might still be present
+    transformedText = transformedText.replace(/<[^>]*>/g, "");
+
+    // Remove code block markers (```) from start and end
+    transformedText = transformedText.replace(/^```\w*\n?|\n?```$/g, "");
+
+    res.json({ transformedText });
+  } catch (error) {
+    console.error(
+      "Error in style transform:",
+      error.response?.data || error.message
+    );
+    res.status(500).json({
+      message: "Error transforming text style",
+      error: error.message,
+    });
+  }
+});
+
 module.exports = router;

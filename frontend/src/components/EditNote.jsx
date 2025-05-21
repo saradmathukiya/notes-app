@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { updateNote } from '../services/noteService';
-import { summarizeNote, checkGrammar } from '../services/aiService';
+import { summarizeNote, checkGrammar, transformStyle } from '../services/aiService';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
 import { Button } from "./ui/button";
@@ -15,8 +15,16 @@ const EditNote = () => {
     const [aiLoading, setAiLoading] = useState(false);
     const [grammarIssues, setGrammarIssues] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedStyle, setSelectedStyle] = useState('professional');
     const navigate = useNavigate();
     const { id } = useParams();
+
+    const supportedStyles = [
+        { value: 'professional', label: 'Professional' },
+        { value: 'casual', label: 'Casual' },
+        { value: 'friendly', label: 'Friendly' },
+        { value: 'creativity', label: 'Creative' }
+    ];
 
     // Quill editor modules configuration
     const modules = {
@@ -114,6 +122,25 @@ const EditNote = () => {
         }
     };
 
+    const handleStyleTransform = async () => {
+        if (!content) {
+            setError('Please add some content to transform');
+            return;
+        }
+
+        setAiLoading(true);
+        setError('');
+
+        try {
+            const { transformedText } = await transformStyle(content, selectedStyle);
+            setContent(transformedText);
+        } catch (error) {
+            setError('Failed to transform text style');
+        } finally {
+            setAiLoading(false);
+        }
+    };
+
     const applyCorrection = (offset, length, replacement) => {
         const before = content.substring(0, offset);
         const after = content.substring(offset + length);
@@ -182,9 +209,33 @@ const EditNote = () => {
                     </div>
 
                     <div className="space-y-2">
-                        <label htmlFor="content" className="text-sm font-medium text-gray-700">
-                            Content
-                        </label>
+                        <div className="flex items-center justify-between">
+                            <label htmlFor="content" className="text-sm font-medium text-gray-700">
+                                Content
+                            </label>
+                            <div className="flex items-center gap-4">
+                                <select
+                                    value={selectedStyle}
+                                    onChange={(e) => setSelectedStyle(e.target.value)}
+                                    className="rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                >
+                                    {supportedStyles.map((style) => (
+                                        <option key={style.value} value={style.value}>
+                                            {style.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                <Button
+                                    type="button"
+                                    onClick={handleStyleTransform}
+                                    disabled={aiLoading}
+                                    variant="outline"
+                                    className="text-sm"
+                                >
+                                    {aiLoading ? 'Transforming...' : 'Transform Style'}
+                                </Button>
+                            </div>
+                        </div>
                         <div className="h-[400px]">
                             <ReactQuill
                                 theme="snow"
