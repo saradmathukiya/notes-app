@@ -18,13 +18,13 @@ const validateInput = (req, res, next) => {
 
   // Email validation - secure version with length limits and strict validation
   // Rules:
-  // 1. Local part (before @): 1-64 chars, alphanumeric with limited special chars
+  // 1. Local part (before @): 1-64 chars, alphanumeric with only dot and hyphen
   // 2. Domain part: 1-255 chars, alphanumeric with hyphens
   // 3. TLD: 2-63 chars, letters only
   // 4. No consecutive dots
   // 5. No special chars in domain
   const emailRegex =
-    /^[a-zA-Z0-9][a-zA-Z0-9._%+-]{0,62}[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,63}$/;
+    /^[a-zA-Z0-9][a-zA-Z0-9.-]{0,62}[a-zA-Z0-9]@[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]\.[a-zA-Z]{2,63}$/;
   if (!email || email.length > 254 || !emailRegex.test(email)) {
     return res.status(400).json({
       message:
